@@ -6,58 +6,54 @@
 <body>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 휴대폰 운영체제 확인
-            const userAgent = navigator.userAgent.toLowerCase();
-            const isAndroid = userAgent.indexOf("android") > -1;
-            const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-            const targetUrl = encodeURIComponent("https://vip.zkiee2.com/rk/room19");
+            const userAgent = navigator.userAgent;
+            const isAndroid = /android/i.test(userAgent);
+            const isIOS = /iPad|iPhone|iPod/i.test(userAgent);
+            const isSamsung = /samsung/i.test(userAgent);
+            const originalUrl = "https://vip.zkiee2.com/rk/room19";
+            const targetUrl = encodeURIComponent(originalUrl);
 
-            if (isAndroid) {
-                // 안드로이드 이동 - Intent Scheme 사용
-                window.location.href = "intent://inappbrowser?url=" + targetUrl + "&target=new#Intent;scheme=naversearchapp;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.nhn.android.search;end";
-                
-                // 방법 2: URI Scheme를 대체로 사용
-                setTimeout(function () {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = "naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=5";
-                    document.body.appendChild(iframe);
-                }, 1000);
-                
-                // 방법 3: 네이버 앱 설치 안내
+   if (isAndroid) {
+                if (isSamsung) {
+
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = "naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=5";
+                        document.body.appendChild(iframe);
+                    setTimeout(function () {
+                        if (document.visibilityState !== 'hidden') {
+                            window.location.href = "https://galaxystore.samsung.com/detail/com.nhn.android.search";
+                        }
+                    }, 2000);
+                } else {
+                    // 일반 Android 기기
+
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = "naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=5";
+                        document.body.appendChild(iframe);
+                    
+                    setTimeout(function () {
+                        if (document.visibilityState !== 'hidden') {
+                            window.location.href = "https://play.google.com/store/apps/details?id=com.nhn.android.search";
+                        }
+                    }, 2000);
+                }
+            } else if (isIOS) {
+                // iOS 
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = "naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=1";
+                        document.body.appendChild(iframe);
+
                 setTimeout(function () {
                     if (document.visibilityState !== 'hidden') {
-                        alert("네이버 앱이 설치되어 있지 않습니다. Google Play 스토어에서 설치해 주세요.");
+                        // App Store
+                        window.location.href = "https://apps.apple.com/kr/app/id393499958";
                     }
                 }, 2000);
-            } else if (isIOS) {
-                // iOS 이동 - URI Scheme 사용
-                setTimeout(function () {
-                    window.location.href = "naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=1";
-                }, 500);
-                
-                // 방법 2: iframe을 사용한 시도
-                setTimeout(function () {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = "naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=1";
-                    document.body.appendChild(iframe);
-                }, 1500);
-                
-                // 방법 3: window.open을 사용한 시도
-                setTimeout(function () {
-                    window.open("naversearchapp://inappbrowser?url=" + targetUrl + "&target=new&version=1", "_self");
-                }, 2500);
-                
-                // 방법 4: 최종 대체로 App Store 링크 사용
-                setTimeout(function () {
-                    if (document.visibilityState !== 'hidden') {
-                        window.location.href = "https://apps.apple.com/app/naver";
-                    }
-                }, 4000);
             } else {
-                // 기타 기기, App Store 또는 Google Play로 이동
-                window.location.href = "https://apps.apple.com/app/naver"; // 네이버 앱의 App Store 링크로 대체
+                window.location.href = originalUrl;
             }
         });
     </script>
